@@ -36,3 +36,10 @@ function populatePreviewItems(startIndex, endIndex) {
     }
     return fragment;
 }
+
+function closePreview(){
+    document.querySelector('[data-list-close]').addEventListener('click', () => {
+        document.querySelector('[data-list-active]').open = false
+    })
+}
+closePreview()

@@ -1,5 +1,6 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 import populatePreviewItems from './preview.js';
+import { setTheme, setSettingsButton, setSettingsCancelButton } from './themeSettings.js';
 // import {populateGenres, populateAuthors} from "./search"
 /**
  * Current page number.
@@ -49,12 +50,12 @@ let matches = books;
 /**
  * Closes the preview
  */
-function closePreview(){
-    document.querySelector('[data-list-close]').addEventListener('click', () => {
-        document.querySelector('[data-list-active]').open = false
-    })
-}
-closePreview()
+// function closePreview(){
+//     document.querySelector('[data-list-close]').addEventListener('click', () => {
+//         document.querySelector('[data-list-active]').open = false
+//     })
+// }
+// closePreview()
 
 
 // /**
@@ -193,32 +194,9 @@ function setSearchForm() {
 
 
 
-/**
- * Sets the settings button event listener.
- */
-function setSettingsButton() {
-    document.querySelector('[data-header-settings]').addEventListener('click', () => {
-        document.querySelector('[data-settings-overlay]').open = true;
-    });
-}
-/**
- * Sets the settings cancel button event listener.
- */
-function setSettingsCancelButton() {
-    document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
-        document.querySelector('[data-settings-overlay]').open = false;
-    });
-}
-/**
- * Sets the theme of the application.
- * @param {string} theme - The theme to set ('day' or 'night').
- */
-function setTheme(theme) {
-    const isDarkMode = theme === 'night';
-    document.querySelector('[data-settings-theme]').value = theme;
-    document.documentElement.style.setProperty('--color-dark', isDarkMode ? '255, 255, 255' : '10, 10, 20');
-    document.documentElement.style.setProperty('--color-light', isDarkMode ? '10, 10, 20' : '255, 255, 255');
-}
+setSettingsButton()
+setSettingsCancelButton()
+
 /**
  * Sets the settings form event listener.
  */
