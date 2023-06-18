@@ -1,7 +1,11 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
-import populatePreviewItems from './preview.js';
+import { createPreviewElement, populatePreviewItems } from './preview.js';
+import { setSearchButton, setSearchCancelButton, populateGenres, populateAuthors } from './search.js';
 import { setTheme, setSettingsButton, setSettingsCancelButton } from './themeSettings.js';
+export {updateListButtonRemaining}
 // import {populateGenres, populateAuthors} from "./search"
+// export {populateGenres, populateAuthors}
+export {matches, page}
 /**
  * Current page number.
  * @type {number}
@@ -12,6 +16,7 @@ let page = 1;
  * @type {Array}
  */
 let matches = books;
+
 // /**
 //  * Creates a preview element for a book.
 //  * @param {Object} book - The book object containing author, id, image, and title.
@@ -50,102 +55,71 @@ let matches = books;
 /**
  * Closes the preview
  */
-// function closePreview(){
-//     document.querySelector('[data-list-close]').addEventListener('click', () => {
-//         document.querySelector('[data-list-active]').open = false
-//     })
-// }
-// closePreview()
+function closePreview(){
+    document.querySelector('[data-list-close]').addEventListener('click', () => {
+        document.querySelector('[data-list-active]').open = false
+    })
+}
+closePreview()
 
 
 // /**
-//  * Creates option elements for a dropdown menu.
-//  * @param {string} container - The dropdown container.
-//  * @param {string} defaultValue - The default value of the dropdown.
-//  * @param {Object} options - The options for the dropdown.
+//  * Populates the genres select element.
+//  * @returns {DocumentFragment} The document fragment containing the genre options.
 //  */
-// function generateOptions(data, defaultOptionText) {
-//     const fragment = document.createDocumentFragment();
-//     const defaultOption = document.createElement('option');
-//     defaultOption.value = 'any';
-//     defaultOption.innerText = defaultOptionText;
-//     fragment.appendChild(defaultOption);
- 
-//     for (const [id, name] of Object.entries(data)) {
-//       const option = document.createElement('option');
-//       option.value = id;
-//       option.innerText = name;
-//       fragment.appendChild(option);
+// function populateGenres() {
+//     const genreHtml = document.createDocumentFragment();
+//     const firstGenreElement = document.createElement('option');
+//     firstGenreElement.value = 'any';
+//     firstGenreElement.innerText = 'All Genres';
+//     genreHtml.appendChild(firstGenreElement);
+//     for (const [id, name] of Object.entries(genres)) {
+//         const element = document.createElement('option');
+//         element.value = id;
+//         element.innerText = name;
+//         genreHtml.appendChild(element);
 //     }
- 
-//     return fragment;
-//   }
+//     return genreHtml;
+// }
+// /**
+//  * Populates the authors select element.
+//  * @returns {DocumentFragment} The document fragment containing the author options.
+//  */
+// function populateAuthors() {
+//     const authorsHtml = document.createDocumentFragment();
+//     const firstAuthorElement = document.createElement('option');
+//     firstAuthorElement.value = 'any';
+//     firstAuthorElement.innerText = 'All Authors';
+//     authorsHtml.appendChild(firstAuthorElement);
+//     for (const [id, name] of Object.entries(authors)) {
+//         const element = document.createElement('option');
+//         element.value = id;
+//         element.innerText = name;
+//         authorsHtml.appendChild(element);
+//     }
+//     return authorsHtml;
+// }
+
+// /**
+//  * Sets the search cancel button event listener.
+//  */
+// function setSearchCancelButton() {
+//     document.querySelector('[data-search-cancel]').addEventListener('click', () => {
+//         document.querySelector('[data-search-overlay]').open = false;
+//     });
+// }
+
+// /**
+//  * Sets the search button event listener.
+//  */
+// function setSearchButton() {
+//     document.querySelector('[data-header-search]').addEventListener('click', () => {
+//         document.querySelector('[data-search-overlay]').open = true;
+//         document.querySelector('[data-search-title]').focus();
+//     });
+// }
 
 
-
-
-// // Generates genre and author options by using the generateOptions
-//   const genreHtml = generateOptions(genres, 'All Genres');
-//   const authorHtml = generateOptions(authors, 'All Authors');
- 
-//   document.querySelector('[data-search-genres]').appendChild(genreHtml);
-//   document.querySelector('[data-search-authors]').appendChild(authorHtml);
- 
-
-/**
- * Sets the search button event listener.
- */
-function setSearchButton() {
-    document.querySelector('[data-header-search]').addEventListener('click', () => {
-        document.querySelector('[data-search-overlay]').open = true;
-        document.querySelector('[data-search-title]').focus();
-    });
-}
-/**
- * Sets the search cancel button event listener.
- */
-function setSearchCancelButton() {
-    document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-        document.querySelector('[data-search-overlay]').open = false;
-    });
-}
-
-/**
- * Populates the genres select element.
- * @returns {DocumentFragment} The document fragment containing the genre options.
- */
-function populateGenres() {
-    const genreHtml = document.createDocumentFragment();
-    const firstGenreElement = document.createElement('option');
-    firstGenreElement.value = 'any';
-    firstGenreElement.innerText = 'All Genres';
-    genreHtml.appendChild(firstGenreElement);
-    for (const [id, name] of Object.entries(genres)) {
-        const element = document.createElement('option');
-        element.value = id;
-        element.innerText = name;
-        genreHtml.appendChild(element);
-    }
-    return genreHtml;
-}
-/**
- * Populates the authors select element.
- * @returns {DocumentFragment} The document fragment containing the author options.
- */
-function populateAuthors() {
-    const authorsHtml = document.createDocumentFragment();
-    const firstAuthorElement = document.createElement('option');
-    firstAuthorElement.value = 'any';
-    firstAuthorElement.innerText = 'All Authors';
-    authorsHtml.appendChild(firstAuthorElement);
-    for (const [id, name] of Object.entries(authors)) {
-        const element = document.createElement('option');
-        element.value = id;
-        element.innerText = name;
-        authorsHtml.appendChild(element);
-    }
-    return authorsHtml;
-}
 
 /**
  * Sets the search form event listener.
@@ -190,13 +164,6 @@ function setSearchForm() {
 }
 
 
-
-
-
-
-setSettingsButton()
-setSettingsCancelButton()
-
 /**
  * Sets the settings form event listener.
  */
@@ -209,8 +176,6 @@ function setSettingsForm() {
         document.querySelector('[data-settings-overlay]').open = false;
     });
 }
-
-
 
 
 /**
@@ -296,16 +261,3 @@ function initializeApp() {
     setListItemsClick();
 }
 initializeApp();
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,17 @@
-import { books, authors} from './data.js';
-export default populatePreviewItems;
-let matches = books;
+import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
+export { createPreviewElement, populatePreviewItems }
+import { matches } from './scripts.js';
+// /**
+//  * Current page number.
+//  * @type {number}
+//  */
+// let page = 1;
+// /**
+//  * Array of book matches based on search filters.
+//  * @type {Array}
+//  */
+// let matches = books;
+
 /**
  * Creates a preview element for a book.
  * @param {Object} book - The book object containing author, id, image, and title.
@@ -37,9 +48,9 @@ function populatePreviewItems(startIndex, endIndex) {
     return fragment;
 }
 
-function closePreview(){
-    document.querySelector('[data-list-close]').addEventListener('click', () => {
-        document.querySelector('[data-list-active]').open = false
-    })
-}
-closePreview()
+// function closePreview(){
+//     document.querySelector('[data-list-close]').addEventListener('click', () => {
+//         document.querySelector('[data-list-active]').open = false
+//     })
+// }
+// closePreview()
