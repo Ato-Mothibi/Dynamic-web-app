@@ -1,6 +1,6 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 export { createPreviewElement, populatePreviewItems }
-import { matches } from './scripts';
+import { matches } from './scripts.js';
 // /**
 //  * Current page number.
 //  * @type {number}
