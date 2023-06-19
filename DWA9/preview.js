@@ -1,23 +1,17 @@
-import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
-export { createPreviewElement, populatePreviewItems }
-import { matches } from './scripts.js';
-// /**
-//  * Current page number.
-//  * @type {number}
-//  */
-// let page = 1;
-// /**
-//  * Array of book matches based on search filters.
-//  * @type {Array}
-//  */
-// let matches = books;
+class BookPreview extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.page = 1;
+    this.matches = [];
+  }
 
-/**
- * Creates a preview element for a book.
- * @param {Object} book - The book object containing author, id, image, and title.
- * @returns {HTMLElement} The preview element.
- */
-function createPreviewElement({ author, id, image, title }) {
+  connectedCallback() {
+    this.render();
+    this.closePreview();
+  }
+
+  createPreviewElement({ author, id, image, title }) {
     const element = document.createElement('button');
     element.classList = 'preview';
     element.setAttribute('data-preview', id);
@@ -28,32 +22,62 @@ function createPreviewElement({ author, id, image, title }) {
         />
         <div class="preview__info">
             <h3 class="preview__title">${title}</h3>
-            <div class="preview__author">${authors[author]}</div>
+            <div class="preview__author">${this.authors[author]}</div>
         </div>
     `;
     return element;
-}
-/**
- * Populates the preview items on the page.
- * @param {number} startIndex - The start index of the items to populate.
- * @param {number} endIndex - The end index of the items to populate.
- * @returns {DocumentFragment} The document fragment containing the preview items.
- */
-function populatePreviewItems(startIndex, endIndex) {
+  }
+
+  populatePreviewItems(startIndex, endIndex) {
     const fragment = document.createDocumentFragment();
-    for (const book of matches.slice(startIndex, endIndex)) {
-        const element = createPreviewElement(book);
-        fragment.appendChild(element);
+    for (const book of this.matches.slice(startIndex, endIndex)) {
+      const element = this.createPreviewElement(book);
+      fragment.appendChild(element);
     }
     return fragment;
+  }
+
+  closePreview() {
+    this.shadowRoot
+      .querySelector('[data-list-close]')
+      .addEventListener('click', () => {
+        this.shadowRoot.querySelector('[data-list-active]').open = false;
+      });
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+        <style>
+          .preview {
+            /* Add your button styles here */
+          }
+
+          .preview__image {
+            /* Add your image styles here */
+          }
+
+          .preview__info {
+            /* Add your info container styles here */
+          }
+
+          .preview__title {
+            /* Add your title styles here */
+          }
+
+          .preview__author {
+            /* Add your author styles here */
+          }
+        </style>
+        <button class="preview" data-list-close>
+          <img class="preview__image" src="">
+          <div class="preview__info">
+            <h3 class="preview__title"></h3>
+            <div class="preview__author"></div>
+          </div>
+        </button>
+    `;
+    // Call your methods here to populate the template
+  }
 }
 
-/**
- * Closes the preview
- */
-function closePreview(){
-    document.querySelector('[data-list-close]').addEventListener('click', () => {
-        document.querySelector('[data-list-active]').open = false
-    })
-}
-closePreview()
+customElements.define('book-preview', BookPreview);

@@ -67,47 +67,4 @@ function setSearchButton() {
     });
 }
 
-
-// /**
-//  * Sets the search form event listener.
-//  */
-// function setSearchForm() {
-//     document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
-//         event.preventDefault();
-//         const formData = new FormData(event.target);
-//         const filters = Object.fromEntries(formData);
-//         const result = [];
-//         for (const book of books) {
-//             let genreMatch = filters.genre === 'any';
-//             for (const singleGenre of book.genres) {
-//                 if (genreMatch) break;
-//                 if (singleGenre === filters.genre) {
-//                     genreMatch = true;
-//                 }
-//             }
-//             if (
-//                 (filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase())) &&
-//                 (filters.author === 'any' || book.author === filters.author) &&
-//                 genreMatch
-//             ) {
-//                 result.push(book);
-//             }
-//         }
-//         page = 1;
-//         matches = result;
-//         if (result.length < 1) {
-//             document.querySelector('[data-list-message]').classList.add('list__message_show');
-//         } else {
-//             document.querySelector('[data-list-message]').classList.remove('list__message_show');
-//         }
-//         document.querySelector('[data-list-items]').innerHTML = '';
-//         const newItems = populatePreviewItems(0, BOOKS_PER_PAGE);
-//         document.querySelector('[data-list-items]').appendChild(newItems);
-//         document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1;
-//         updateListButtonRemaining();
-//         window.scrollTo({ top: 0, behavior: 'smooth' });
-//         document.querySelector('[data-search-overlay]').open = false;
-//     });
-// }
-
 export { setSearchButton, setSearchCancelButton, populateGenres, populateAuthors}

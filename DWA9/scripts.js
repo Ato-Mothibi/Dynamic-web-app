@@ -17,109 +17,6 @@ let page = 1;
  */
 let matches = books;
 
-// /**
-//  * Creates a preview element for a book.
-//  * @param {Object} book - The book object containing author, id, image, and title.
-//  * @returns {HTMLElement} The preview element.
-//  */
-// function createPreviewElement({ author, id, image, title }) {
-//     const element = document.createElement('button');
-//     element.classList = 'preview';
-//     element.setAttribute('data-preview', id);
-//     element.innerHTML = `
-//         <img
-//             class="preview__image"
-//             src="${image}"
-//         />
-//         <div class="preview__info">
-//             <h3 class="preview__title">${title}</h3>
-//             <div class="preview__author">${authors[author]}</div>
-//         </div>
-//     `;
-//     return element;
-// }
-// /**
-//  * Populates the preview items on the page.
-//  * @param {number} startIndex - The start index of the items to populate.
-//  * @param {number} endIndex - The end index of the items to populate.
-//  * @returns {DocumentFragment} The document fragment containing the preview items.
-//  */
-// function populatePreviewItems(startIndex, endIndex) {
-//     const fragment = document.createDocumentFragment();
-//     for (const book of matches.slice(startIndex, endIndex)) {
-//         const element = createPreviewElement(book);
-//         fragment.appendChild(element);
-//     }
-//     return fragment;
-// }
-// /**
-//  * Closes the preview
-//  */
-// function closePreview(){
-//     document.querySelector('[data-list-close]').addEventListener('click', () => {
-//         document.querySelector('[data-list-active]').open = false
-//     })
-// }
-// closePreview()
-
-
-// /**
-//  * Populates the genres select element.
-//  * @returns {DocumentFragment} The document fragment containing the genre options.
-//  */
-// function populateGenres() {
-//     const genreHtml = document.createDocumentFragment();
-//     const firstGenreElement = document.createElement('option');
-//     firstGenreElement.value = 'any';
-//     firstGenreElement.innerText = 'All Genres';
-//     genreHtml.appendChild(firstGenreElement);
-//     for (const [id, name] of Object.entries(genres)) {
-//         const element = document.createElement('option');
-//         element.value = id;
-//         element.innerText = name;
-//         genreHtml.appendChild(element);
-//     }
-//     return genreHtml;
-// }
-// /**
-//  * Populates the authors select element.
-//  * @returns {DocumentFragment} The document fragment containing the author options.
-//  */
-// function populateAuthors() {
-//     const authorsHtml = document.createDocumentFragment();
-//     const firstAuthorElement = document.createElement('option');
-//     firstAuthorElement.value = 'any';
-//     firstAuthorElement.innerText = 'All Authors';
-//     authorsHtml.appendChild(firstAuthorElement);
-//     for (const [id, name] of Object.entries(authors)) {
-//         const element = document.createElement('option');
-//         element.value = id;
-//         element.innerText = name;
-//         authorsHtml.appendChild(element);
-//     }
-//     return authorsHtml;
-// }
-
-// /**
-//  * Sets the search cancel button event listener.
-//  */
-// function setSearchCancelButton() {
-//     document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-//         document.querySelector('[data-search-overlay]').open = false;
-//     });
-// }
-
-// /**
-//  * Sets the search button event listener.
-//  */
-// function setSearchButton() {
-//     document.querySelector('[data-header-search]').addEventListener('click', () => {
-//         document.querySelector('[data-search-overlay]').open = true;
-//         document.querySelector('[data-search-title]').focus();
-//     });
-// }
-
-
 
 /**
  * Sets the search form event listener.
@@ -231,9 +128,6 @@ function setListItemsClick() {
         }
     });
 }
-
-
-
 
 
 /**
