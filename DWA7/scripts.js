@@ -1,7 +1,5 @@
-// data.js
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 
-//Takes instances of different services as dependencies.
 class BookApp {
   constructor(bookService, searchService, previewService, settingsService) {
     this.page = 1;
@@ -12,14 +10,20 @@ class BookApp {
     this.settingsService = settingsService;
   }
 
-  initializeApp() {
-    const startingItems = this.previewService.populatePreviewItems(0, BOOKS_PER_PAGE);
+  async initializeApp() {
+    const books = await this.bookService.getAllBooks();
+    const startingItems = this.previewService.populatePreviewItems(0, BOOKS_PER_PAGE, books);
     const genreHtml = this.searchService.populateGenres();
     const authorsHtml = this.searchService.populateAuthors();
     this.previewService.appendPreviewItems(startingItems);
     this.searchService.appendGenres(genreHtml);
     this.searchService.appendAuthors(authorsHtml);
     this.settingsService.setTheme();
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      this.settingsService.setTheme('night');
+    } else {
+      this.settingsService.setTheme('day');
+    }
     this.attachEventListeners();
   }
 
@@ -41,7 +45,7 @@ class BookApp {
       this.page = 1;
       this.matches = result;
       this.previewService.clearPreviewItems();
-      const newItems = this.previewService.populatePreviewItems(0, BOOKS_PER_PAGE);
+      const newItems = this.previewService.populatePreviewItems(0, BOOKS_PER_PAGE, this.matches);
       this.previewService.appendPreviewItems(newItems);
       this.previewService.updateListButtonRemaining(this.page, this.matches.length);
       this.searchService.closeSearchOverlay();
@@ -50,18 +54,18 @@ class BookApp {
     this.previewService.setListButton(() => {
       const startIndex = this.page * BOOKS_PER_PAGE;
       const endIndex = (this.page + 1) * BOOKS_PER_PAGE;
-      const fragment = this.previewService.populatePreviewItems(startIndex, endIndex);
+      const fragment = this.previewService.populatePreviewItems(startIndex, endIndex, this.matches);
       this.previewService.appendPreviewItems(fragment);
       this.page += 1;
       this.previewService.updateListButtonRemaining(this.page, this.matches.length);
     });
 
-    this.previewService.setListItemsClick((node) => {
-      const active = this.previewService.getActiveBook(node);
-      if (active) {
-        this.previewService.openPreview(active);
-      }
-    });
+    // this.previewService.setListItemsClick((node) => {
+    //   const active = this.previewService.getActiveBook(node);
+    //   if (active) {
+    //     this.previewService.openPreview(active);
+    //   }
+    // });
 
     this.settingsService.setSettingsCancelButton(() => {
       this.settingsService.closeSettingsOverlay();
@@ -79,6 +83,7 @@ class BookApp {
   }
 }
 
+
 //BookService class handles the retrieval of books.
 class BookService {
   constructor(books) {
@@ -86,7 +91,7 @@ class BookService {
   }
 
   getAllBooks() {
-    return this.books;
+    return Promise.resolve(this.books);
   }
 }
 
@@ -208,14 +213,14 @@ class PreviewService {
     return element;
   }
 
-  populatePreviewItems(startIndex, endIndex) {
+  populatePreviewItems(startIndex, endIndex, books) {
     const fragment = document.createDocumentFragment();
-    for (const book of this.books.slice(startIndex, endIndex)) {
+    for (const book of books.slice(startIndex, endIndex)) {
       const element = this.createPreviewElement(book);
       fragment.appendChild(element);
     }
     return fragment;
-  }
+  }  
 
   appendPreviewItems(fragment) {
     document.querySelector('[data-list-items]').appendChild(fragment);
@@ -277,12 +282,24 @@ class PreviewService {
   }
 
   openPreview(book) {
-    document.querySelector('[data-list-active]').open = true;
-    document.querySelector('[data-list-blur]').src = book.image;
-    document.querySelector('[data-list-image]').src = book.image;
-    document.querySelector('[data-list-title]').innerText = book.title;
-    document.querySelector('[data-list-subtitle]').innerText = `${this.authors[book.author]} (${new Date(book.published).getFullYear()})`;
-    document.querySelector('[data-list-description]').innerText = book.description;
+    const listActive = document.querySelector('[data-list-active]');
+    const listBlur = document.querySelector('[data-list-blur]');
+    const listImage = document.querySelector('[data-list-image]');
+    const listTitle = document.querySelector('[data-list-title]');
+    const listSubtitle = document.querySelector('[data-list-subtitle]');
+    const listDescription = document.querySelector('[data-list-description]');
+    const closeButton = document.querySelector('[data-list-close]');
+
+    listActive.open = true;
+    listBlur.src = book.image;
+    listImage.src = book.image;
+    listTitle.innerText = book.title;
+    listSubtitle.innerText = `${this.authors[book.author]} (${new Date(book.published).getFullYear()})`;
+    listDescription.innerText = book.description;
+
+    closeButton.addEventListener('click', () => {
+      listActive.open = false;
+    })
   }
 }
 
