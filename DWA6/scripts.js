@@ -156,15 +156,19 @@ class BookApp {
       const fragment = this.populatePreviewItems(startIndex, endIndex);
       document.querySelector('[data-list-items]').appendChild(fragment);
       this.page += 1;
+      this.updateListButtonRemaining();
     });
+    this.updateListButtonRemaining()
   }
 
   updateListButtonRemaining() {
     const remaining = Math.max(this.matches.length - (this.page * BOOKS_PER_PAGE), 0);
-    document.querySelector('[data-list-button]').innerHTML = `
+    const listButton = document.querySelector('[data-list-button]');
+    listButton.innerHTML = `
         <span>Show more</span>
         <span class="list__remaining"> (${remaining})</span>
     `;
+    listButton.disabled = remaining === 0;
   }
 
   setListItemsClick() {
