@@ -13,3 +13,4 @@ const settingsService = new SettingsService();
 
 const app = new BookApp(bookService, searchService, previewService, settingsService);
 app.initializeApp();
+
