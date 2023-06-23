@@ -1,5 +1,5 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
-import { DOMElementCreator, PreviewDataProviderImpl, DOMPreviewRenderer} from './preview.js';
+import { DOMElementCreator, PreviewDataProviderImpl, DOMPreviewRenderer } from './preview.js';
 // import createBookApp from './preview'
 // // Interfaces
 // class ElementCreator {
