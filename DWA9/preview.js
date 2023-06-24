@@ -1,104 +1,43 @@
-import { authors } from './data.js';
-
-// Factory function
-function createBookPreviewComponent() {
-  // CSS styles
-  const styles = `
-    .preview {
-      border-width: 0;
-      width: 100%;
-      font-family: Roboto, sans-serif;
-      padding: 0.5rem 1rem;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      text-align: left;
-      border-radius: 8px;
-      border: 1px solid rgba(var(--color-dark), 0.15);
-      background: rgba(var(--color-light), 1);
-    }
-
-    @media (min-width: 60rem) {
-      .preview {
-        padding: 1rem;
-      }
-    }
-
-    .preview_hidden {
-      display: none;
-    }
-
-    .preview:hover {
-      background: rgba(var(--color-blue), 0.05);
-    }
-
-    .preview__image {
-      width: 48px;
-      height: 70px;
-      object-fit: cover;
-      background: grey;
-      border-radius: 2px;
-      box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-        0px 1px 1px 0px rgba(0, 0, 0, 0.1), 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
-    }
-
-    .preview__info {
-      padding: 1rem;
-    }
-
-    .preview__title {
-      margin: 0 0 0.5rem;
-      font-weight: bold;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;  
-      overflow: hidden;
-      color: rgba(var(--color-dark), 0.8)
-    }
-
-    .preview__author {
-      color: rgba(var(--color-dark), 0.4);
-    }
-  `;
-
-  // Component class
-  class BookPreviewComponent extends HTMLElement {
-    constructor() {
-      super();
-      this.attachShadow({ mode: 'open' });
-      this.shadowRoot.innerHTML = `
-        <style>${styles}</style>
-        <button class="preview" data-preview></button>
-      `;
-    }
-
-    connectedCallback() {
-      this.render();
-    }
-
-    set book(book) {
-      this._book = book;
-      this.render();
-    }
-
-    render() {
-      if (this._book) {
-        this.shadowRoot.querySelector('.preview').innerHTML = `
-          <img class="preview__image" src="${this._book.image}" />
-          <div class="preview__info">
-            <h3 class="preview__title">${this._book.title}</h3>
-            <div class="preview__author">${authors[this._book.author]}</div>
-          </div>
-        `;
-      }
-    }
+export class ListItemsComponent extends HTMLElement {
+  constructor() {
+    super();
   }
 
-  // Define the custom element
-  customElements.define('book-preview', BookPreviewComponent);
 
-  // Return the factory function
-  return BookPreviewComponent;
+  connectedCallback() {
+    this.setListItemsClick();
+  }
+
+
+  setListItemsClick() {
+    this.querySelector('[data-list-items]').addEventListener('click', (event) => {
+      const pathArray = Array.from(event.path || event.composedPath());
+      let active = null;
+      for (const node of pathArray) {
+        if (active) break;
+        if (node?.dataset?.preview) {
+          let result = null;
+          for (const singleBook of books) {
+            if (result) break;
+            if (singleBook.id === node?.dataset?.preview) result = singleBook;
+          }
+          active = result;
+        }
+      }
+      if (active) {
+        this.querySelector('[data-list-active]').open = true;
+        this.querySelector('[data-list-blur]').src = active.image;
+        this.querySelector('[data-list-image]').src = active.image;
+        this.querySelector('[data-list-title]').innerText = active.title;
+        this.querySelector('[data-list-subtitle]').innerText = `${authors[active.author]} (${new Date(
+          active.published).getFullYear()})`;
+        this.querySelector('[data-list-description]').innerText = active.description;
+      }
+    });
+  }
 }
 
-// export { createBookPreviewComponent };
+
+customElements.define('list-items', ListItemsComponent);
+
+
